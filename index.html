@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GERBANG Dr.s - SYSTEM ACCESS</title>
+    <style>
+        /* RESET & BASE */
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { margin: 0; background-color: #0a0514; color: white; overflow-x: hidden; }
+
+        /* LOADING DNA SCREEN */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #0a0514; z-index: 9999; display: none;
+            justify-content: center; align-items: center;
+        }
+
+        .container-dna { position: relative; width: 200px; height: 300px; perspective: 1000px; display: flex; justify-content: center; align-items: center; }
+        .orbit { position: absolute; width: 250px; height: 250px; border: 2px solid rgba(188, 19, 254, 0.3); border-radius: 50%; transform: rotateX(75deg); box-shadow: 0 0 20px rgba(188, 19, 254, 0.2); }
+        .dna { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-around; align-items: center; transform-style: preserve-3d; animation: rotateDNA 8s linear infinite; }
+        .strand { width: 100px; height: 2px; display: flex; justify-content: space-between; align-items: center; transform-style: preserve-3d; }
+        .dot { width: 12px; height: 12px; background: #bc13fe; border-radius: 50%; box-shadow: 0 0 15px #bc13fe, 0 0 30px #8a2be2; }
+        .bridge { height: 1px; background: rgba(255, 255, 255, 0.15); flex-grow: 1; }
+        @keyframes rotateDNA { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+
+        /* Posisi Strand */
+        .strand:nth-child(1) { transform: rotateY(0deg); } .strand:nth-child(2) { transform: rotateY(36deg); }
+        .strand:nth-child(3) { transform: rotateY(72deg); } .strand:nth-child(4) { transform: rotateY(108deg); }
+        .strand:nth-child(5) { transform: rotateY(144deg); } .strand:nth-child(6) { transform: rotateY(180deg); }
+        .strand:nth-child(7) { transform: rotateY(216deg); } .strand:nth-child(8) { transform: rotateY(252deg); }
+        .strand:nth-child(9) { transform: rotateY(288deg); } .strand:nth-child(10) { transform: rotateY(324deg); }
+
+        .logo-text-loading { position: absolute; bottom: -60px; text-align: center; width: 100%; color: white; text-shadow: 0 0 20px #bc13fe; }
+
+        /* PAGES STYLING */
+        .page { display: none; padding: 20px; max-width: 600px; margin: 0 auto; min-height: 100vh; }
+        .active-page { display: block; }
+
+        /* WELCOME SCREEN */
+        #welcome-page { 
+            background: #0a0514; padding: 40px 25px; border: 1px solid rgba(188, 19, 254, 0.3); border-radius: 15px; margin: 20px auto; width: 90%;
+        }
+        .header-title { border-bottom: 2px solid #bc13fe; padding-bottom: 10px; margin-bottom: 25px; }
+        .header-title h1 { margin: 0; font-size: 2.2rem; letter-spacing: 2px; }
+        .welcome-text { color: #00d2ff; font-weight: bold; margin-bottom: 10px; }
+        .section-title { color: #bc13fe; font-weight: bold; margin-top: 25px; text-transform: uppercase; font-size: 1.1rem; border-left: 4px solid #bc13fe; padding-left: 10px; }
+        .guide-list { padding-left: 20px; color: #ccc; font-size: 0.9rem; list-style-type: none; margin-top: 10px; }
+        .guide-list li { margin-bottom: 8px; }
+        .guide-list li::before { content: "•"; color: #bc13fe; display: inline-block; width: 1em; margin-left: -1em; }
+        
+        .btn-enter { width: 100%; padding: 18px; background: transparent; border: 2px solid #bc13fe; color: white; font-weight: bold; cursor: pointer; margin-top: 35px; text-transform: uppercase; border-radius: 5px; }
+        .btn-enter:disabled { opacity: 0.3; }
+
+        /* MAIN MENU */
+        .portal-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+        .time-info { color: #bc13fe; font-family: monospace; }
+        .menu-card { background: #16121f; border-radius: 15px; padding: 18px; margin-bottom: 12px; border-left: 6px solid #bc13fe; cursor: pointer; transition: 0.3s; }
+        .menu-card:active { transform: scale(0.98); background: #1f1a2b; }
+        .menu-card h3 { margin: 0; font-size: 1.1rem; color: #fff; }
+        .menu-card p { margin: 5px 0 0 0; font-size: 0.85rem; color: #aaa; }
+
+        /* VIEWER */
+        .viewer-container { width: 100%; height: 75vh; border: 1px solid #333; border-radius: 15px; overflow: hidden; margin-top: 10px; }
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen">
+        <div class="container-dna">
+            <div class="orbit"></div>
+            <div class="dna">
+                <div class="strand"><div class="dot"></div><div class="bridge"></div><div class="dot"></div></div>
+                <div class="strand"><div class="dot"></div><div class="bridge"></div><div class="dot"></div></div>
+                <div class="strand"><div class="dot"></div><div class="bridge"></div><div class="dot"></div></div>
+                <div class="strand"><div class="dot"></div><div class="bridge"></div><div class="dot"></div></div>
+                <div class="strand"><div class="dot"></div><div class="bridge"></div><div class="dot"></div></div>
+                <div class="strand"><div class="dot"></div><div class="bridge"></div><div class="dot"></div></div>
+                <div class="strand"><div class="dot"></div><div class="bridge"></div><div class="dot"></div></div>
+                <div class="strand"><div class="dot"></div><div class="bridge"></div><div class="dot"></div></div>
+                <div class="strand"><div class="dot"></div><div class="bridge"></div><div class="dot"></div></div>
+                <div class="strand"><div class="dot"></div><div class="bridge"></div><div class="dot"></div></div>
+            </div>
+            <div class="logo-text-loading"><h1 style="font-size: 3rem; margin: 0;">Dr.s</h1></div>
+        </div>
+    </div>
+
+    <div id="welcome-page" class="page active-page">
+        <div class="header-title">
+            <h1>GERBANG Dr.s</h1>
+            <small style="color: #bc13fe; font-weight: bold;">DATABASE PORTAL // VERSI 1.0</small>
+        </div>
+        <div class="welcome-text">Selamat Datang di Gerbang Dr.s, Admin!</div>
+        <p style="font-size: 0.9rem;">Akses sistem pusat telah dibuka. Harap perhatikan informasi di bawah ini sebelum melanjutkan:</p>
+        
+        <div class="section-title">01. Isi Portal</div>
+        <ul class="guide-list">
+            <li><b>Asisten AI:</b> Kecerdasan buatan pusat Dr.s.</li>
+            <li><b>Pendaftaran:</b> Registrasi anggota resmi.</li>
+            <li><b>Kalkulator Sains:</b> Alat bantu riset & hitung.</li>
+            <li><b>Saluran Dr.s:</b> Pusat informasi WhatsApp.</li>
+            <li><b>Website Resmi:</b> Database utama & cadangan.</li>
+        </ul>
+
+        <div class="section-title">02. Peraturan Sistem</div>
+        <ul class="guide-list">
+            <li>Dilarang membocorkan data portal ke pihak luar.</li>
+            <li>Gunakan alat hitung hanya untuk riset valid.</li>
+            <li>Gunakan AI sesuai dengan protokol penelitian.</li>
+        </ul>
+
+        <div style="margin-top: 40px;">
+            <input type="checkbox" id="agree" onchange="playClick(); document.getElementById('enterBtn').disabled = !this.checked">
+            <label for="agree" style="font-weight: bold; font-size: 0.9rem;"> SAYA PAHAM & SIAP MASUK</label>
+            <button id="enterBtn" class="btn-enter" disabled onclick="switchPage('main-menu')">MASUK KE SISTEM Dr.s</button>
+        </div>
+    </div>
+
+    <div id="main-menu" class="page">
+        <div class="portal-header">
+            <h2 style="font-size: 2rem; margin: 0;">DATA Dr.s</h2>
+            <div class="time-info" id="clock">00:00:00 // Dr.s-TIME</div>
+        </div>
+        <p style="color: #bc13fe; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px;">CITRA ANTARIKSA Dr.s</p>
+        <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=800&q=80" style="width: 100%; border-radius: 15px; margin-bottom: 20px;">
+
+        <div class="menu-card" onclick="switchPage('view-page', 'https://drs-ai.vercel.app/')">
+            <h3>Asisten AI Dr.s</h3>
+            <p>Akses pusat kecerdasan buatan terintegrasi.</p>
+        </div>
+
+        <div class="menu-card" onclick="switchPage('view-page', 'https://science534.github.io/pendaftaran-drs/')">
+            <h3>Pendaftaran Dr.s</h3>
+            <p>Formulir registrasi anggota baru komunitas Dr.s.</p>
+        </div>
+
+        <div class="menu-card" onclick="window.open('https://whatsapp.com/channel/0029Vb85QN14Spk7pIWiVo1F', '_blank'); playClick();">
+            <h3>Saluran Dr.s</h3>
+            <p>Ikuti update terbaru di Channel WhatsApp kami.</p>
+        </div>
+
+        <div class="menu-card" onclick="switchPage('view-page', 'https://science534.github.io/Data-drs/')">
+            <h3>Website Resmi 1</h3>
+            <p>Database utama riset dan informasi Dr.s.</p>
+        </div>
+
+        <div class="menu-card" onclick="switchPage('view-page', 'https://science534.github.io/Data2-drs/')">
+            <h3>Website Resmi 2</h3>
+            <p>Server cadangan dan arsip data komunitas.</p>
+        </div>
+
+        <div class="menu-card" onclick="switchPage('view-page', 'https://science534.github.io/Calculator-drs/')">
+            <h3>Kalkulator Sains</h3>
+            <p>Alat hitung riset ilmiah tim Dr.s.</p>
+        </div>
+    </div>
+
+    <div id="view-page" class="page">
+        <div class="portal-header">
+            <h2 style="font-size: 1.5rem; margin: 0;">SYSTEM VIEWER</h2>
+        </div>
+        <div class="viewer-container">
+            <iframe id="target-frame"></iframe>
+        </div>
+        <button style="width: 100%; padding: 15px; background: #bc13fe; color: white; border: none; border-radius: 10px; margin-top: 20px; font-weight: bold; cursor: pointer;" onclick="switchPage('main-menu')">KEMBALI KE MENU UTAMA</button>
+    </div>
+
+    <script>
+        function playClick() {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sine'; 
+            oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); 
+            oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1); 
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.1);
+        }
+
+        function switchPage(pageId, url = '') {
+            playClick(); 
+            document.getElementById('loading-screen').style.display = 'flex';
+            setTimeout(() => {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+                if(url) document.getElementById('target-frame').src = url;
+                document.getElementById(pageId).classList.add('active-page');
+                document.getElementById('loading-screen').style.display = 'none';
+                window.scrollTo(0,0);
+            }, 2000);
+        }
+
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0') + ":" + now.getSeconds().toString().padStart(2,'0') + " // Dr.s-TIME";
+        }, 1000);
+    </script>
+</body>
+</html>
